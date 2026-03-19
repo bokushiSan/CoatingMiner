@@ -1,21 +1,5 @@
 services:
 
-  postgres:
-    image: postgres:18-alpine
-    container_name: coatingminer_postgres
-    restart: unless-stopped
-    env_file:
-      - .env
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - pg_data:/var/lib/postgresql/data
-
   api:
     build:
       context: .
@@ -28,7 +12,33 @@ services:
     volumes:
       - ./data:/app/data
     depends_on:
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  postgres:
+    image: postgres:18-alpine
+    container_name: coatingminer_postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - pg_data:/var/lib/postgresql/data
+
 
   redis:
     image: redis:7
