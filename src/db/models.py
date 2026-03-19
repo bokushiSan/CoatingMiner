@@ -2,13 +2,14 @@ import uuid
 from sqlalchemy import Column, Text, DateTime, Enum
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import UUID
-from database import Base
+from src.db.database import Base
 
-class Papers(Base):
+
+class Paper(Base):
     """
-    Таблица статьи.
+    Модель таблицы статьи.
     """
-    __tablename__ = 'papers'
+    __tablename__ = 'paper'
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     source_type = Column(

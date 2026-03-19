@@ -1,9 +1,9 @@
 import os
-from database import engine, Base
 from sqlalchemy.schema import CreateSchema
 import logging
 from dotenv import load_dotenv
-from models import Papers
+from src.db.database import engine, Base
+from src.db.models import Paper
 
 load_dotenv()
 
@@ -30,4 +30,5 @@ def create_tables():
     logger.info('Все таблицы успешно созданы или уже существуют!')
 
 if __name__ == '__main__':
+    print(Base.metadata.tables)
     create_tables()

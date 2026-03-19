@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.ext.declarative import declarative_base
-from contextlib import contextmanager
 import os
 from typing import Generator
 from dotenv import load_dotenv
@@ -24,10 +23,9 @@ Base = declarative_base(metadata=metadata_obj)
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-@contextmanager
 def get_db() -> Generator[Session, None, None]:
     """
-    Контекстный менеджер для получения сессии БД.
+    Получение сессии БД.
     """
     db = SessionLocal()
     try:
