@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, Text, DateTime, Enum
+from sqlalchemy import Column, Text, DateTime, Enum, Integer
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import UUID
 from src.db.database import Base
@@ -18,6 +18,7 @@ class Paper(Base):
     )
     source_value = Column(Text, nullable=True)
     file_path = Column(Text, nullable=True)
+    file_size = Column(Integer, nullable=True)
     status = Column(
         Enum(
             'uploaded',

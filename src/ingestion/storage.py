@@ -14,23 +14,22 @@ def generate_paper_id() -> str:
     paper_id = str(uuid.uuid4())
     return paper_id
 
-def save_pdf(file, paper_id: str) -> str:
+def save_pdf(pdf_file, paper_id: str) -> str:
     """
     Сохранение pdf-файла в хранилище под сгенерированным id статьи.
 
     Args:
-        file: Объект загруженного файла, который должен иметь метод `file.read()` для чтения содержимого.
+        pdf_file: Объект загруженного файла, который должен иметь метод `file.read()` для чтения содержимого.
         paper_id (str): Уникальный идентификатор статьи, который будет использован в имени сохраняемого файла.
 
     Returns:
         file_path (str): Полный путь к сохраненному файлу.
     """
-
     Path(STORAGE_PATH).mkdir(parents=True, exist_ok=True)
 
     file_path = os.path.join(STORAGE_PATH, f"{paper_id}.pdf")
 
     with open(file_path, "wb") as buffer:
-        buffer.write(file.file.read())
+        buffer.write(pdf_file.file.read())
 
     return file_path
