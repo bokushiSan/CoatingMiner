@@ -1,7 +1,7 @@
 import os
 import logging
 from src.db.models import Paper
-from src.ingestion.storage import generate_paper_id, save_pdf
+from src.utils.storage import generate_paper_id, save_pdf
 
 logger = logging.getLogger(__name__)
 
@@ -14,13 +14,20 @@ class PDFService:
     def __init__(self, db):
         self.db = db
 
-    def save_pdf_from(
+    def save_pdf(
             self,
             pdf_file,
             source_type: str
-    ) -> Paper | None:
+    ) -> Paper:
         """
         Сохранение pdf-файла из потока в файловую систему и БД.
+
+        Args:
+            pdf_file (): pdf-файл.
+            source_type (str): тип исходника (pdf, doi, url).
+
+        Return:
+            paper (Paper): модель таблицы Paper.
         """
         paper_id = generate_paper_id()
 
@@ -55,4 +62,33 @@ class PDFService:
             #     logger.info(f'Удален файл {file_path} из-за ошибки')
             #
             logger.error(f'Ошибка при сохранении статьи: {e}')
+            raise ValueError(f'ttt')
             # # raise PaperProcessingError(f'Не удалось сохранить PDF: {e}')
+
+    # def process_doi(
+    #         self,
+    #         doi: str
+    # ):
+    #     """
+    #     Обработка загрузки по doi (doi -> pdf).
+    #
+    #     Args:
+    #         doi (str): doi статьи
+    #     """
+    #     doi_service = DOIService()
+    #     pdf_file = doi_service.get_url()
+    #
+    #     paper_pdf = self.save_pdf(pdf_file, source_type='doi')
+    #     return paper_pdf
+
+    def process_pdf(
+            self,
+            pdf_file
+    ):
+        """
+        Обработка загрузки прямого pdf (pdf -> pdf).
+        :param pdf_file:
+        :return:
+        """
+        paper_pdf = self.save_pdf(pdf_file, source_type='url')
+        return paper_pdf
