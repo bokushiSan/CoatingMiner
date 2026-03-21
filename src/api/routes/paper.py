@@ -3,7 +3,7 @@ from fastapi import APIRouter, UploadFile, File, Depends
 from sqlalchemy.orm import Session
 from src.api.services.pdf_service import PDFService
 from src.db.database import get_db
-from src.db.models import Paper
+from src.db.models import Paper, ExtractedData
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

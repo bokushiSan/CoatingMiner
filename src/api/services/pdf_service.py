@@ -23,13 +23,14 @@ class PDFService:
         Сохранение pdf-файла из потока в файловую систему и БД.
 
         Args:
-            pdf_file (): pdf-файл.
-            source_type (str): тип исходника (pdf, doi, url).
+            pdf_file: pdf-файл.
+            source_type: тип исходника (pdf, doi, url).
 
-        Return:
-            paper (Paper): модель таблицы Paper.
+        Returns:
+            paper: модель таблицы Paper.
         """
         paper_id = generate_paper_id()
+        file_path = None
 
         try:
             file_path = save_pdf(pdf_file, paper_id)
@@ -41,9 +42,7 @@ class PDFService:
                 # source_value=None,
                 file_path=file_path,
                 file_size=file_size,
-                status='uploaded',
-                # created_at=None,
-                # updated_at=None
+                status='uploaded'
             )
 
             self.db.add(paper)
@@ -51,19 +50,15 @@ class PDFService:
             self.db.refresh(paper)
 
             logger.info(f'Статья {paper_id} успешно сохранена')
-
             return paper
 
         except Exception as e:
-            # pass
-            # # Если произошла ошибка, удаляем файл если он был создан
-            # if 'file_path' in locals() and os.path.exists(file_path):
-            #     os.remove(file_path)
-            #     logger.info(f'Удален файл {file_path} из-за ошибки')
-            #
+            self.db.rollback()
+            if file_path and os.path.exists(file_path):
+                os.remove(file_path)
+                logger.info(f'Файл {file_path} удален из-за ошибки')
             logger.error(f'Ошибка при сохранении статьи: {e}')
-            raise ValueError(f'ttt')
-            # # raise PaperProcessingError(f'Не удалось сохранить PDF: {e}')
+            raise ValueError(f'Не удалось сохранить PDF: {e}')  # TODO: Нужен кастомный класс исключения
 
     # def process_doi(
     #         self,
@@ -84,11 +79,15 @@ class PDFService:
     def process_pdf(
             self,
             pdf_file
-    ):
+    ) -> Paper:
         """
         Обработка загрузки прямого pdf (pdf -> pdf).
-        :param pdf_file:
-        :return:
+
+        Args:
+            pdf_file: pdf-файл.
+
+        Returns:
+            paper_pdf ():
         """
-        paper_pdf = self.save_pdf(pdf_file, source_type='url')
+        paper_pdf = self.save_pdf(pdf_file, source_type='pdf')
         return paper_pdf
