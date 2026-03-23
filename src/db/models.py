@@ -31,19 +31,19 @@ class Paper(Base):
     """
     __tablename__ = 'paper'
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, comment='Уникальный id статьи')
     source_type = Column(source_type_enum, nullable=False, comment='Тип источника: pdf - загруженный файл, doi - '
                                                                    'цифровой идентификатор, url - ссылка')
     source_value = Column(Text, nullable=True)
-    file_path = Column(Text, nullable=True)
-    file_size = Column(Integer, nullable=True)
+    file_path = Column(Text, nullable=True, comment='Путь к файлу')
+    file_size = Column(Integer, nullable=True, comment='Вес файла')
     status = Column(paper_status_enum, nullable=False, default='uploaded', comment='Статус обработки статьи: uploaded '
                                                                                    '- загружен, processing - в '
                                                                                    'обработке, completed - завершен '
                                                                                    'успешно, failed - завершен '
                                                                                    'неуспешно')
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), comment='Время создания')
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), comment='Время обновления')
 
     extracted_data = relationship(argument='ExtractedData', back_populates='paper', uselist=False)
 

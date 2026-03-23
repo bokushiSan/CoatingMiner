@@ -1,8 +1,10 @@
 import os
 import uuid
 from pathlib import Path
+from src.exceptions import FileNotPDFError
 
 STORAGE_PATH = os.getenv('STORAGE_PATH', 'data/raw_papers')
+FILE_SIZE_LIMIT_MB = int(os.getenv('FILE_SIZE_LIMIT_MB', '150'))
 
 def generate_paper_id() -> uuid.UUID:
     """
@@ -25,6 +27,9 @@ def save_pdf(pdf_file, paper_id: uuid.UUID) -> str:
     Returns:
         file_path: Полный путь к сохраненному файлу.
     """
+    if not pdf_file.filename.endswith('.pdf'):
+        raise FileNotPDFError('Файл должен иметь расширение .pdf')
+
     Path(STORAGE_PATH).mkdir(parents=True, exist_ok=True)
 
     file_path = os.path.join(STORAGE_PATH, f"{paper_id}.pdf")
