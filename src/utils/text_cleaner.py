@@ -1,4 +1,5 @@
 import re
+import unicodedata
 
 
 class TextCleaner:
@@ -15,10 +16,31 @@ class TextCleaner:
         Returns:
             text: Очищенный текст.
         """
+        text = self._normalize_unicode_chars(text)
         text = self._clean_linebreaks(text)
         text = self._clean_numbers(text)
         text = self._clean_extra_space(text)
         text = self._clean_multiple_spaces(text)
+        return text
+
+    @staticmethod
+    def _normalize_unicode_chars(text: str) -> str:
+        """
+        Исправление артефактов кодировки шрифтов pdf: типографских лигатур и кривого маппинга символов.
+        """
+        replacements = {
+            # '\ufb00': 'ff',
+            # '\ufb01': 'fi',
+            # '\ufb02': 'fl',
+            # '\ufb03': 'ffi',
+            # '\ufb04': 'ffl',
+            # '\ufb05': 'st',
+            # '\ufb06': 'st',
+            '\u019f': 'ti',  # Ɵ -> ti
+            '\xa0': ' ',
+        }
+        for char, replacement in replacements.items():
+            text = text.replace(char, replacement)
         return text
 
     @staticmethod
@@ -72,7 +94,3 @@ class TextCleaner:
             Очищенный текст.
         """
         return re.sub(r'\n{3,}', '\n\n', text)
-
-if __name__ == '__main__':
-    tc = TextCleaner()
-    print(tc.clean('2. Materials and \n\n\n\n\n\n\n\n\nmethods'))

@@ -2,8 +2,7 @@ import re
 from src.utils.text_cleaner import TextCleaner
 from src.utils.page_extractor import PageExtractor
 from src.utils.section_extractor import SectionExtractor
-from src.entities.models import ProcessedText, PageText
-
+from src.entities.models import ProcessedText
 
 class PaperProcessor:
     """Обработка pdf-файла для выявления разделов статьи и текста в них."""
@@ -21,12 +20,12 @@ class PaperProcessor:
         self.page_extractor = page_extractor
         self.section_extractor = section_extractor
 
-    def process(self, file_path, section_names=None):
+    def process(self, file_path: str, section_names: list[str] | None = None) -> ProcessedText:
         if section_names is None:
             section_names = ['abstract', 'introduction', 'experimental', 'material and methods', 'results', 'conclusion']
         section_patterns = self._build_section_patterns(section_names)
         pages_data = self.page_extractor.extract(file_path)
-        if sum([i.char_count for i in pages_data]) < self.min_char:
+        if sum(i.char_count for i in pages_data) < self.min_char:
             raise ValueError(f'Тут поменять Exception')
 
         raw_text = '\n'.join(t.raw_text for t in pages_data)
@@ -41,7 +40,8 @@ class PaperProcessor:
             sections=sections,
         )
 
-    def _build_section_patterns(self, section_names) -> list:
+    @staticmethod
+    def _build_section_patterns(section_names: list[str]) -> list[tuple[str, str]]:
         return [
             (name, rf'\b{re.escape(name)}\b')
             for name in section_names

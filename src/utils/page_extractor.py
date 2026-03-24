@@ -18,7 +18,6 @@ class PageExtractor:
             with fitz.open(file_path) as doc:
                 for idx, page in enumerate(doc):
                     page_text = page.get_text()
-                    page_text = self.replace_bug_symbols(page_text)
                     pages_data.append(
                         PageText(
                             page_num=idx + 1,
@@ -29,30 +28,3 @@ class PageExtractor:
         except Exception as e:
             raise RuntimeError(f'Здесь поправить еррор {e}')
         return pages_data
-
-    @staticmethod
-    def replace_bug_symbols(text: str) -> str:
-        """
-        Замена лигатур из-за неправильного определения текста.
-
-        Args:
-            text: Исходный текст.
-
-        Returns:
-            text: Исправленный текст
-        """
-        replacements = {
-            '\xa0': ' ',
-            # 'Ɵ': 'ti',
-            # 'ﬁ': 'fi',
-            # 'ﬂ': 'fl',
-            # 'ﬀ': 'ff'
-        }
-
-        for wrong, correct in replacements.items():
-            text = text.replace(wrong, correct)
-        return text
-
-if __name__ == '__main__':
-    pe = PageExtractor()
-    pe.extract()

@@ -68,7 +68,7 @@ class SectionExtractor:
             text: Нормализованная строка.
         """
         text = re.sub(r"[\t\n\r]", ' ', text)  # пробельные символы -> пробел
-        text = re.sub(r"\xa0", ' ', text)  # пробельные символы (\xa0) -> пробел
+        # text = re.sub(r"\xa0", ' ', text)  # пробельные символы (\xa0) -> пробел
         text = re.sub(r"\d", '', text)  # убираем цифры-разделители
         text = text.strip()
         return text
