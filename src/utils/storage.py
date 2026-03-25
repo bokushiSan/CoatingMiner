@@ -1,10 +1,10 @@
 import os
 import uuid
 from pathlib import Path
-from src.exceptions import FileNotPDFError
+from src.exceptions import FileNotPDFError, FileTooLargeError
 
 STORAGE_PATH = os.getenv('STORAGE_PATH', 'data/raw_papers')
-FILE_SIZE_LIMIT_MB = int(os.getenv('FILE_SIZE_LIMIT_MB', '150'))
+FILE_SIZE_LIMIT_MB = int(os.getenv('FILE_SIZE_LIMIT_MB', '30'))
 
 def generate_paper_id() -> uuid.UUID:
     """
@@ -29,6 +29,9 @@ def save_pdf(pdf_file, paper_id: uuid.UUID) -> str:
     """
     if not pdf_file.filename.endswith('.pdf'):
         raise FileNotPDFError('Файл должен иметь расширение .pdf')
+
+    if pdf_file.size > FILE_SIZE_LIMIT_MB * 1024 * 1024:
+        raise FileTooLargeError(f'Файл превышает лимит в {FILE_SIZE_LIMIT_MB} МБ')
 
     Path(STORAGE_PATH).mkdir(parents=True, exist_ok=True)
 

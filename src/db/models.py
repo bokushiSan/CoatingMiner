@@ -26,15 +26,13 @@ paper_status_enum = ENUM(
 
 
 class Paper(Base):
-    """
-    Модель таблицы статьи.
-    """
+    """Модель таблицы статьи."""
     __tablename__ = 'paper'
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, comment='Уникальный id статьи')
     source_type = Column(source_type_enum, nullable=False, comment='Тип источника: pdf - загруженный файл, doi - '
                                                                    'цифровой идентификатор, url - ссылка')
-    source_value = Column(Text, nullable=True)
+    source_value = Column(Text, nullable=True, comment='Текст файла')
     file_path = Column(Text, nullable=True, comment='Путь к файлу')
     file_size = Column(Integer, nullable=True, comment='Вес файла')
     status = Column(paper_status_enum, nullable=False, default='uploaded', comment='Статус обработки статьи: uploaded '
@@ -49,6 +47,7 @@ class Paper(Base):
 
 
 class ExtractedData(Base):
+    """Модель таблицы извлеченных данных."""
     __tablename__ = 'extracted_data'
 
     id = Column(Integer, primary_key=True, autoincrement=True)

@@ -8,6 +8,8 @@ class FileNotPDFError(CoatingMinerError):
     pass
 
 
-# class FileTooLargeError(CoatingMinerError):
-#     def __init__(self, file_size, limit_size):
-#         pass
+class FileTooLargeError(CoatingMinerError):
+    """Загруженный файл слишком большой по размеру."""
+    # def __init__(self, file_size, limit_size):
+    #     pass
+    pass

@@ -1,5 +1,5 @@
 import logging
-from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
 from sqlalchemy.orm import Session
 from src.api.services.pdf_service import PDFService
 from src.db.database import get_db
@@ -26,7 +26,8 @@ def upload_by_pdf(
             'status': paper.status,
         }
     except Exception as e:
-        logger.info(f'Статья не добавлена: {e}')
+        logger.error(f'Статья не добавлена: {e}')
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get('/{paper_id}/status')
 def get_status(
@@ -36,7 +37,8 @@ def get_status(
     paper = db.query(Paper).filter(Paper.id == paper_id).first()
 
     if not paper:
-        return {'error': 'paper not found'}
+        logger.error(f'Тут ошибка.')  # TODO: тут поправить
+        raise HTTPException(status_code=404, detail='Paper not found')
 
     return {
         'paper_id': paper.id,
