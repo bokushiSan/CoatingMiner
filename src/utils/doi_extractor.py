@@ -6,21 +6,29 @@ logger = logging.getLogger(__name__)
 
 
 class DOIExtractor:
-    """
-    Извлекает DOI из текста первых страниц PDF. Проверяет только первые N страниц.
-    """
+    """Извлекает DOI из текста первых N страниц pdf-файла статьи."""
 
     DOI_PATTERN = re.compile(
         r'\b(?:doi[:\s]*)?(10\.\d{4,9}/[^\s,\"\'<>]+)',
         re.IGNORECASE
     )
 
-    def __init__(self, max_pages: int = 3):
+    def __init__(
+            self,
+            max_pages: int = 3
+    ):
+        """
+        Args:
+            max_pages: Количество страниц для поиска DOI.
+        """
         self.max_pages = max_pages
 
-    def extract(self, pages: list[PageText]) -> str | None:
+    def extract(
+            self,
+            pages: list[PageText]
+    ) -> str | None:
         """
-
+        Извлечение DOI из первых max_page страниц pdf-файла.
 
         Args:
             pages: список PageText от PageExtractor.
@@ -28,6 +36,10 @@ class DOIExtractor:
         Returns:
             Первый найденный DOI или None.
         """
+        if self.max_pages <= 0:
+            logger.warning('Количество страниц должно быть положительно.')
+            return None
+
         for page in pages[:self.max_pages]:
             match = self.DOI_PATTERN.search(page.raw_text)
             if match:
@@ -37,14 +49,3 @@ class DOIExtractor:
 
         logger.info('DOI не найден в тексте.')
         return None
-
-
-if __name__ == '__main__':
-    from src.utils.page_extractor import PageExtractor
-    dex = DOIExtractor()
-    pex = PageExtractor()
-    # file_path = '../../tests/data/Testing_paper.pdf'
-    file_path = '../../tests/data/test_paper.pdf'
-    pages_data = pex.extract(file_path)
-    # print(pages_data)
-    print(dex.extract(pages_data))
