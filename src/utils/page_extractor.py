@@ -21,8 +21,7 @@ class PageExtractor:
                     pages_data.append(
                         PageText(
                             page_num=idx + 1,
-                            raw_text=page_text,
-                            char_count=len(page_text)
+                            raw_text=page_text
                         )
                     )
         except Exception as e:
