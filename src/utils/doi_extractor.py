@@ -1,12 +1,12 @@
-import re
 import logging
+import re
 from src.entities.models import PageText
 
 logger = logging.getLogger(__name__)
 
 
 class DOIExtractor:
-    """Извлекает DOI из текста первых N страниц pdf-файла статьи."""
+    """Извлечение DOI из текста первых N страниц pdf-файла статьи."""
 
     DOI_PATTERN = re.compile(
         r'\b(?:doi[:\s]*)?(10\.\d{4,9}/[^\s,\"\'<>]+)',
