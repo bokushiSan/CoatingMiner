@@ -6,9 +6,12 @@ logger = logging.getLogger(__name__)
 
 
 class MetaDataFetcher:
-    """Преобразование..."""
+    """Извлечение метаданных статьи - DOI, Название, авторы, год."""
 
-    def __init__(self, doi: str):
+    def __init__(
+            self,
+            doi: str
+    ):
         self.cr = Crossref()
         self.doi = doi
 
@@ -21,6 +24,7 @@ class MetaDataFetcher:
 
         title = self._get_title(work_data)
         authors = self._get_authors(work_data)
+
         year = None  # TODO: нужно поправить get_year
         # year = self._get_year(work_data)
 
@@ -59,12 +63,6 @@ class MetaDataFetcher:
     #     print(year_data.get(['date-parts'][0][0]))
     #     year = year_data.get(['date-parts'][0][0], None)
     #     return year
-
-
-if __name__ == '__main__':
-    doi = '10.1016/j.surfcoat.2020.125657'
-    mdf = MetaDataFetcher(doi)
-    print(mdf.get_metadata())
 
 
 
