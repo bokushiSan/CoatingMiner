@@ -17,3 +17,7 @@ class PaperMetadata(BaseModel):
     title: Optional[str] = None
     authors: Optional[list[str]] = []
     year: Optional[int] = None
+
+class ExtractionResult(BaseModel):
+    coating_material: Optional[str] = None
+    substrate_material: Optional[str] = None

@@ -5,19 +5,20 @@ from src.entities.models import PaperMetadata
 logger = logging.getLogger(__name__)
 
 
-class MetaDataFetcher:
+class MetadataFetcher:
     """Извлечение метаданных статьи - DOI, Название, авторы, год."""
 
     def __init__(
+            self
+    ):
+        self.cr = Crossref()
+
+    def get_metadata(
             self,
             doi: str
     ):
-        self.cr = Crossref()
-        self.doi = doi
-
-    def get_metadata(self):
         try:
-            work = self.cr.works(ids=self.doi)
+            work = self.cr.works(ids=doi)
             work_data = work['message']
         except Exception as e:
             raise ValueError(f'Тут кастомное исключение {e}')  # TODO: кастомное исключение
@@ -29,7 +30,7 @@ class MetaDataFetcher:
         # year = self._get_year(work_data)
 
         paper_metadata = PaperMetadata(
-            doi=self.doi,
+            doi=doi,
             title=title,
             authors=authors,
             year=year
@@ -63,7 +64,3 @@ class MetaDataFetcher:
     #     print(year_data.get(['date-parts'][0][0]))
     #     year = year_data.get(['date-parts'][0][0], None)
     #     return year
-
-
-
-

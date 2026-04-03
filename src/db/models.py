@@ -14,9 +14,7 @@ source_type_enum = ENUM(
 
 paper_status_enum = ENUM(
     'uploaded',
-    'queued',
     'processing',
-    'text_extracted',
     'extracted',
     'completed',
     'failed',
@@ -52,12 +50,14 @@ class ExtractedData(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     paper_id = Column(UUID(as_uuid=True), ForeignKey('paper.id'), nullable=False, unique=True)
+    doi = Column(Text, nullable=True)
     title = Column(Text, nullable=True)
     authors = Column(JSONB, nullable=True)
     year = Column(Integer, nullable=True)
     coating_material = Column(Text, nullable=True)
+    substrate_material = Column(Text, nullable=True)
     # TODO: здесь нужно добавить новые колонки (тип нанесения, материал, микротвердость, толщина, класс адгезии и пр.)
-    raw_json = Column(JSONB, nullable=True)
+    # raw_json = Column(JSONB, nullable=True)
     extracted_at = Column(DateTime(timezone=True), server_default=func.now())
 
     paper = relationship(argument='Paper', back_populates='extracted_data')

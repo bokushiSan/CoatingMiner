@@ -2,6 +2,7 @@ import os
 import logging
 from src.db.models import Paper
 from src.utils.storage import generate_paper_id, save_pdf
+from src.api.services.extraction_service import ExtractionService
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +14,7 @@ class PDFService:
 
     def __init__(self, db):
         self.db = db
+        self.extraction_service = ExtractionService(db=self.db)
 
     def save_pdf(
             self,
@@ -90,4 +92,5 @@ class PDFService:
             paper_pdf ():
         """
         paper_pdf = self.save_pdf(pdf_file, source_type='pdf')
+        self.extraction_service.process_data(paper_pdf)
         return paper_pdf

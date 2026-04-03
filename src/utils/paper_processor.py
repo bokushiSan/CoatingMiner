@@ -70,20 +70,20 @@ class PaperProcessor:
         ]
         return pattern
 
-
-if __name__ == '__main__':
-    tc = TextCleaner()
-    pe = PageExtractor()
-    se = SectionExtractor()
-    pp = PaperProcessor(text_cleaner=tc, page_extractor=pe, section_extractor=se)
-    section_names = ['Abstract', 'Introduction', 'Methodology', 'Results and discussion', 'References']
-    pro = pp.process('../../tests/data/Testing_paper.pdf')
-
-    print(pro.file_path)
-    print(pro.raw_text)
-    print(pro.clean_text)
-    print(pro.pages)
-    print(pro.sections)
-    print(section_names)
-    print(pro.sections.keys())
-    print(pro.sections['results'])
+#
+# if __name__ == '__main__':
+#     tc = TextCleaner()
+#     pe = PageExtractor()
+#     se = SectionExtractor()
+#     pp = PaperProcessor(text_cleaner=tc, page_extractor=pe, section_extractor=se)
+#     section_names = ['Abstract', 'Introduction', 'Methodology', 'Results and discussion', 'References']
+#     pro = pp.process('../../tests/data/Testing_paper.pdf')
+#
+#     print(pro.file_path)
+#     print(pro.raw_text)
+#     print(pro.clean_text)
+#     print(pro.pages)
+#     print(pro.sections)
+#     print(section_names)
+#     print(pro.sections.keys())
+#     print(pro.sections['results'])
